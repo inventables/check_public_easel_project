@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # name: check-public-project
-# about: TODO
+# about: Check that Easel projects are shared publicly
 # meta_topic_id: TODO
 # version: 0.0.1
 # authors: Discourse

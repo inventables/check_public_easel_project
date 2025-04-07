@@ -3,7 +3,7 @@ en:
     admin:
       site_settings:
         categories:
-          TODO_plugin_name: "Plugin Name"
+          check_public_project: "Check Public Project"
   js:
-    discourse_plugin_name:
+    check_public_project:
       placeholder: placeholder

@@ -1,4 +1,4 @@
-# **Plugin Name** Plugin
+# **Check Public Project** Plugin
 
 **Plugin Summary**
 

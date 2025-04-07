@@ -1,4 +1,4 @@
-TODO_plugin_name:
-  plugin_name_enabled:
+check_public_project:
+  check_public_project_enabled:
     default: false
     client: true

@@ -18,8 +18,9 @@ async function checkLinkPublic(url) {
   }
 }
 
-// Easel warnings cache (used by decorateCookedElement)
+// Easel warnings cache and URL check timestamps
 let easelWarnings = [];
+let urlCheckTimes = new Map();
 
 export default {
   name: "check-easel-project-links",
@@ -36,15 +37,32 @@ export default {
         async _checkEaselLinks() {
           const raw = this.model.reply || "";
           const urls = extractEaselLinks(raw);
-          easelWarnings = [];
+          const now = Date.now();
+          
+          // Keep only warnings for URLs that are still in the text
+          easelWarnings = easelWarnings.filter(w => 
+            urls.some(url => w.includes(url))
+          );
 
           await Promise.all(
             urls.map(async (url) => {
-              const ok = await checkLinkPublic(url);
-              if (!ok) {
-                easelWarnings.push(
-                  `⚠️ Your Easel project <a href="${url}" target="_blank">${url}</a> is not shared publicly.`
-                );
+              const lastCheckTime = urlCheckTimes.get(url) || 0;
+              // Check if URL hasn't been checked in the last 3 seconds
+              if (now - lastCheckTime >= 3000) {
+                const ok = await checkLinkPublic(url);
+                urlCheckTimes.set(url, now);
+                
+                if (!ok) {
+                  // Only add warning if it's not already there
+                  if (!easelWarnings.some(w => w.includes(url))) {
+                    easelWarnings.push(
+                      `⚠️ Your Easel project <a href="${url}" target="_blank">${url}</a> is not shared publicly.`
+                    );
+                  }
+                } else {
+                  // Remove warning if URL is now accessible
+                  easelWarnings = easelWarnings.filter(w => !w.includes(url));
+                }
               }
             })
           );

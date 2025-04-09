@@ -91,17 +91,13 @@ export default {
 
       api.decorateCookedElement(
         (elem, helper) => {
-          console.log("In decorateCookedElement...");
-          console.log("Current warnings:", easelWarnings);
           if (!helper || !helper.getModel || !easelWarnings.length) {
-            console.log("Skipping warning display - no warnings or missing helper");
             return;
           }
 
           // Only inject in composer preview
           const model = helper.getModel();
           if (!model?.composer) {
-            console.log("Skipping warning display - not in composer");
             return;
           }
 
@@ -122,7 +118,6 @@ export default {
             .join("");
 
           box.innerHTML = warningHtml;
-          console.log("Created warning box with HTML:", warningHtml);
           
           // Insert at the top of the preview
           if (preview.firstChild) {

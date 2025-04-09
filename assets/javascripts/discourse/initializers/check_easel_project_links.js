@@ -45,7 +45,6 @@ export default {
                 easelWarnings.push(
                   `⚠️ The project link <a href="${url}" target="_blank">${url}</a> may not be publicly viewable.`
                 );
-                console.log("Pushing easel warning");
               }
             })
           );
@@ -53,6 +52,48 @@ export default {
           // Force preview refresh by triggering a re-render
           this.set("model.reply", this.model.reply + " ");
           this.set("model.reply", this.model.reply.trim());
+
+          // Add warnings to preview
+          if (easelWarnings.length > 0) {
+            const preview = document.querySelector(".d-editor-preview");
+            if (preview) {
+              const existing = preview.querySelector(".easel-warning-box");
+              if (existing) existing.remove();
+
+              const box = document.createElement("div");
+              box.className = "easel-warning-box";
+              box.style.cssText = `
+                margin: 1em 0;
+                padding: 1em;
+                background-color: var(--danger-low);
+                border: 1px solid var(--danger);
+                border-radius: 4px;
+                color: var(--primary);
+              `;
+
+              const warningHtml = easelWarnings
+                .map((w) => `
+                  <div class="warning-message" style="
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5em;
+                    margin-bottom: 0.5em;
+                  ">
+                    <i class="fa fa-exclamation-triangle" style="color: var(--danger)"></i>
+                    ${w}
+                  </div>
+                `)
+                .join("");
+
+              box.innerHTML = warningHtml;
+              
+              if (preview.firstChild) {
+                preview.insertBefore(box, preview.firstChild);
+              } else {
+                preview.appendChild(box);
+              }
+            }
+          }
         },
 
         init() {
@@ -64,10 +105,18 @@ export default {
       api.decorateCookedElement(
         (elem, helper) => {
           console.log("In decorateCookedElement...");
-          if (!helper || !helper.getModel || !easelWarnings.length) return;
+          console.log("Current warnings:", easelWarnings);
+          if (!helper || !helper.getModel || !easelWarnings.length) {
+            console.log("Skipping warning display - no warnings or missing helper");
+            return;
+          }
 
-          // Only inject in composer preview (stream = true)
-          if (!helper.getModel()?.composer) return;
+          // Only inject in composer preview
+          const model = helper.getModel();
+          if (!model?.composer) {
+            console.log("Skipping warning display - not in composer");
+            return;
+          }
 
           const preview = elem;
           const existing = preview.querySelector(".easel-warning-box");
@@ -75,14 +124,40 @@ export default {
 
           const box = document.createElement("div");
           box.className = "easel-warning-box";
-          box.innerHTML = easelWarnings
-            .map((w) => `<div class="warning-message">${w}</div>`)
+          box.style.cssText = `
+            margin: 1em 0;
+            padding: 1em;
+            background-color: var(--danger-low);
+            border: 1px solid var(--danger);
+            border-radius: 4px;
+            color: var(--primary);
+          `;
+
+          const warningHtml = easelWarnings
+            .map((w) => `
+              <div class="warning-message" style="
+                display: flex;
+                align-items: center;
+                gap: 0.5em;
+                margin-bottom: 0.5em;
+              ">
+                <i class="fa fa-exclamation-triangle" style="color: var(--danger)"></i>
+                ${w}
+              </div>
+            `)
             .join("");
 
-          console.log("Prepending element...");
-          preview.prepend(box);
+          box.innerHTML = warningHtml;
+          console.log("Created warning box with HTML:", warningHtml);
+          
+          // Insert at the top of the preview
+          if (preview.firstChild) {
+            preview.insertBefore(box, preview.firstChild);
+          } else {
+            preview.appendChild(box);
+          }
         },
-        { id: "easel-link-checker", onlyStream: true }
+        { id: "easel-link-checker", onlyStream: false }
       );
     });
   },

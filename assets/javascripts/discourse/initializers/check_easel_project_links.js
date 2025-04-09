@@ -62,24 +62,11 @@ export default {
 
               const box = document.createElement("div");
               box.className = "easel-warning-box";
-              box.style.cssText = `
-                margin: 1em 0;
-                padding: 1em;
-                background-color: var(--danger-low);
-                border: 1px solid var(--danger);
-                border-radius: 4px;
-                color: var(--primary);
-              `;
 
               const warningHtml = easelWarnings
                 .map((w) => `
-                  <div class="warning-message" style="
-                    display: flex;
-                    align-items: center;
-                    gap: 0.5em;
-                    margin-bottom: 0.5em;
-                  ">
-                    <i class="fa fa-exclamation-triangle" style="color: var(--danger)"></i>
+                  <div class="warning-message">
+                    <i class="fa fa-exclamation-triangle"></i>
                     ${w}
                   </div>
                 `)
@@ -124,24 +111,11 @@ export default {
 
           const box = document.createElement("div");
           box.className = "easel-warning-box";
-          box.style.cssText = `
-            margin: 1em 0;
-            padding: 1em;
-            background-color: var(--danger-low);
-            border: 1px solid var(--danger);
-            border-radius: 4px;
-            color: var(--primary);
-          `;
 
           const warningHtml = easelWarnings
             .map((w) => `
-              <div class="warning-message" style="
-                display: flex;
-                align-items: center;
-                gap: 0.5em;
-                margin-bottom: 0.5em;
-              ">
-                <i class="fa fa-exclamation-triangle" style="color: var(--danger)"></i>
+              <div class="warning-message">
+                <i class="fa fa-exclamation-triangle"></i>
                 ${w}
               </div>
             `)

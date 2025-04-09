@@ -10,6 +10,8 @@
 
 enabled_site_setting :check_public_project_enabled
 
+register_asset "stylesheets/common/check-public-project.scss"
+
 module ::CheckPublicProject
   PLUGIN_NAME = "check-public-project"
 end

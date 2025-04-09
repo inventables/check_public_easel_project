@@ -2,7 +2,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { debounce } from "@ember/runloop";
 
 function extractEaselLinks(text) {
-  const regex = /(?:https?:\/\/easel\.com\/projects\/|http:\/\/localhost:4200\/projects\/)\S+/gi;
+  const regex = /(?:https?:\/\/easel\.com\/projects\/|https:\/\/localhost:3005\/projects\/)\S+/gi;
   return [...text.matchAll(regex)].map((m) => m[0]);
 }
 
@@ -11,8 +11,9 @@ async function checkLinkPublic(url) {
     const response = await fetch(url, {
       method: "HEAD",
       mode: "cors",
+      redirect: "manual"
     });
-    return response.ok;
+    return response.status === 200;
   } catch (e) {
     return false;
   }

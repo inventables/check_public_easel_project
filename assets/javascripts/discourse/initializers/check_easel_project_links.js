@@ -2,7 +2,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { debounce } from "@ember/runloop";
 
 function extractEaselLinks(text) {
-  const regex = /http:\/\/localhost:4200\/projects\/\S+/gi;
+  const regex = /(?:https?:\/\/easel\.com\/projects\/|http:\/\/localhost:4200\/projects\/)\S+/gi;
   return [...text.matchAll(regex)].map((m) => m[0]);
 }
 

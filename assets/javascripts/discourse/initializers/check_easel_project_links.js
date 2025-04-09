@@ -1,5 +1,5 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { debounce } from "@ember/runloop";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 function extractEaselLinks(text) {
   const regex = /(?:https?:\/\/easel\.com\/projects\/|https:\/\/localhost:3005\/projects\/)\S+/gi;
@@ -14,7 +14,7 @@ async function checkLinkPublic(url) {
       redirect: "manual"
     });
     return response.status === 200;
-  } catch (e) {
+  } catch (_error) {
     return false;
   }
 }
@@ -28,7 +28,7 @@ export default {
 
   initialize() {
     withPluginApi("1.15.0", (api) => {
-      api.modifyClass("controller:composer", {
+      api.modifyClass("service:composer", {
         pluginId: "easel-project-check",
 
         _checkEaselLinksDebounced() {
@@ -39,9 +39,9 @@ export default {
           const raw = this.model.reply || "";
           const urls = extractEaselLinks(raw);
           const now = Date.now();
-          
+
           // Keep only warnings for URLs that are still in the text
-          easelWarnings = easelWarnings.filter(w => 
+          easelWarnings = easelWarnings.filter(w =>
             urls.some(url => w.includes(url))
           );
 
@@ -52,7 +52,7 @@ export default {
               if (now - lastCheckTime >= 3000) {
                 const ok = await checkLinkPublic(url);
                 urlCheckTimes.set(url, now);
-                
+
                 if (!ok) {
                   // Only add warning if it's not already there
                   if (!easelWarnings.some(w => w.includes(url))) {
@@ -101,7 +101,6 @@ export default {
               `;
 
               box.innerHTML = warningHtml + helpText;
-              
               // Insert at the top of the editor container
               editorContainer.insertAdjacentElement('beforebegin', box);
             }

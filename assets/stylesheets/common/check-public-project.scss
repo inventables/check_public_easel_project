@@ -16,4 +16,20 @@
       color: var(--danger);
     }
   }
+
+  .warning-help {
+    margin-top: 1em;
+    padding-top: 1em;
+    border-top: 1px solid var(--danger-low-mid);
+    font-size: 0.9em;
+    color: var(--primary-high);
+
+    .menu-path {
+      font-family: monospace;
+      background: var(--primary-very-low);
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+      font-weight: bold;
+    }
+  }
 } 

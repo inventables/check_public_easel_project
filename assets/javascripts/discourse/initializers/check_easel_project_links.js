@@ -74,7 +74,14 @@ export default {
                 `)
                 .join("");
 
-              box.innerHTML = warningHtml;
+              // Add help text with menu path
+              const helpText = `
+                <div class="warning-help">
+                  Share your project in Easel under <span class="menu-path">Project / Share</span>
+                </div>
+              `;
+
+              box.innerHTML = warningHtml + helpText;
               
               // Insert at the top of the editor container
               editorContainer.insertAdjacentElement('beforebegin', box);

@@ -14,7 +14,7 @@ async function checkLinkPublic(url) {
       redirect: "manual"
     });
     return response.status === 200;
-  } catch (_error) {
+  } catch {
     return false;
   }
 }

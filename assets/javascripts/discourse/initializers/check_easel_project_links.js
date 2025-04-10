@@ -2,7 +2,8 @@ import { debounce } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 function extractEaselLinks(text) {
-  const regex = /(?:https?:\/\/easel\.com\/projects\/|https:\/\/localhost:3005\/projects\/)\S+/gi;
+  const regex =
+    /(?:https?:\/\/easel\.com\/projects\/|https:\/\/localhost:3005\/projects\/)\S+/gi;
   return [...text.matchAll(regex)].map((m) => m[0]);
 }
 
@@ -11,7 +12,7 @@ async function checkLinkPublic(url) {
     const response = await fetch(url, {
       method: "HEAD",
       mode: "cors",
-      redirect: "manual"
+      redirect: "manual",
     });
     return response.status === 200;
   } catch {
@@ -41,8 +42,8 @@ export default {
           const now = Date.now();
 
           // Keep only warnings for URLs that are still in the text
-          easelWarnings = easelWarnings.filter(w =>
-            urls.some(url => w.includes(url))
+          easelWarnings = easelWarnings.filter((w) =>
+            urls.some((url) => w.includes(url))
           );
 
           await Promise.all(
@@ -55,14 +56,14 @@ export default {
 
                 if (!ok) {
                   // Only add warning if it's not already there
-                  if (!easelWarnings.some(w => w.includes(url))) {
+                  if (!easelWarnings.some((w) => w.includes(url))) {
                     easelWarnings.push(
                       `⚠️ Your Easel project <a href="${url}" target="_blank">${url}</a> is not shared publicly.`
                     );
                   }
                 } else {
                   // Remove warning if URL is now accessible
-                  easelWarnings = easelWarnings.filter(w => !w.includes(url));
+                  easelWarnings = easelWarnings.filter((w) => !w.includes(url));
                 }
               }
             })
@@ -85,12 +86,14 @@ export default {
               box.className = "easel-warning-box";
 
               const warningHtml = easelWarnings
-                .map((w) => `
+                .map(
+                  (w) => `
                   <div class="warning-message">
                     <i class="fa fa-exclamation-triangle"></i>
                     ${w}
                   </div>
-                `)
+                `
+                )
                 .join("");
 
               // Add help text with menu path
@@ -102,7 +105,7 @@ export default {
 
               box.innerHTML = warningHtml + helpText;
               // Insert at the top of the editor container
-              editorContainer.insertAdjacentElement('beforebegin', box);
+              editorContainer.insertAdjacentElement("beforebegin", box);
             }
           } else {
             // Remove any existing warnings when there are none
@@ -121,4 +124,3 @@ export default {
     });
   },
 };
-
